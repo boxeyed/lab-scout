@@ -27,3 +27,20 @@ def scout_labs():
     else:
         print("No matches found.")
 
+# main function
+def main():
+    while True:
+        print("\n1. Search labs")
+        print("2. Quit")
+        choice = input("Choose an option: ").strip()
+ 
+        if choice == "1":
+            scout_labs()
+        elif choice == "2":
+            break
+        else:
+            print("Invalid choice, try again.")
+ 
+ 
+if __name__ == "__main__":
+    main()
