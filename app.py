@@ -1,6 +1,6 @@
 import pandas as pd
  
-CSV_PATH = "sample_data.csv"
+CSV_PATH = "data.csv"
  
  
 def load_records():
