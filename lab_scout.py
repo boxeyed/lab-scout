@@ -4,6 +4,11 @@ import sqlite3
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
  
+def get_connection():
+    con = sqlite3.connect(DATABASE)
+    con.row_factory = sqlite3.Row
+    return con
+
 def load_records():
     """Read the CSV and return a list of row dictionaries."""
     df = pd.read_csv(CSV_PATH)
