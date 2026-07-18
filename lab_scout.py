@@ -1,7 +1,8 @@
 import pandas as pd
- 
+import sqlite3
+
 CSV_PATH = "data.csv"
- 
+DATABASE = "labs.db"
  
 def load_records():
     """Read the CSV and return a list of row dictionaries."""
