@@ -9,6 +9,11 @@ def get_connection():
     con.row_factory = sqlite3.Row
     return con
 
+def setup_db():
+    con = get_connection()
+
+    
+
 def load_records():
     """Read the CSV and return a list of row dictionaries."""
     df = pd.read_csv(CSV_PATH)
@@ -29,7 +34,10 @@ def scout_labs():
         for record in matches:
             print(f"\nTitle: {record['Title']}")
             print(f"Topics: {record['Topics']}")
-            print(f"Description: {record['Description']}")
+            print(f"Contact Name: {record['Contact Name']}")
+            print(f"Contact Email: {record['Contact Email']}")
+            print(f"Recruiting Status: {record['Recruiting Status']}")
+            print(f"Website: {record['Website']}")
     else:
         print("No matches found.")
 
@@ -38,15 +46,27 @@ def add_lab():
     """Ask the user for new lab details and append them to the CSV."""
     title = input("Title: ").strip()
     topics = input("Topics (comma-separated): ").strip()
-    description = input("Description: ").strip()
+    contact_name = input("Contact Name: ").strip()
+    contact_email = input("Contact Email: ").strip()
+    recruit_status = input("Recruiting Status: ").strip()
+    website = input("Website: ").strip()
  
-    if not title or not topics or not description:
-        print("All fields are required — lab not added.")
+    if not contact_name:
+        contact_name = '-'
+    if not contact_email:
+        contact_email = '-'
+    if not recruit_status:
+        recruit_status = '-'
+    if not website:
+        website = '-'
+        
+    if not title or not topics:
+        print("Title and topics required — lab not added.")
         return
  
     df = pd.read_csv(CSV_PATH)
     new_row = pd.DataFrame(
-        [{'Title': title, 'Topics': topics, 'Description': description}],
+        [{'Title': title, 'Topics': topics, 'Contact Name': contact_name, 'Contact Email': contact_email, 'Recruiting Status': recruit_status, 'Website': website}],
         columns=df.columns
     )
 
