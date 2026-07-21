@@ -11,8 +11,19 @@ def get_connection():
 
 def setup_db():
     con = get_connection()
+    cursor = con.cursor()
 
-    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS labs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            website TEXT,
+            recruiting_status TEXT
+        )
+    ''')
+
+    con.commit()
+    con.close()
 
 def load_records():
     """Read the CSV and return a list of row dictionaries."""
@@ -20,7 +31,7 @@ def load_records():
     return df.to_dict(orient='records')
 
 def scout_labs():
-    """Ask the user for a topic, print matching labs."""
+    """Ask the user for a topic, print matching labFls."""
     records = load_records()
     topic = input("Enter a topic to search for: ").strip()
  
