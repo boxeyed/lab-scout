@@ -95,7 +95,14 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
             status = "Unknown"
 
         con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
-        lab_id = cursor.lastrowid
+        lab_id = cursor.lastrowid # for lab_x_topics
+
+        # to 'topics'
+        for topic_name in row["Topics"].split(","):
+            topic_name = topic_name.strip()
+            if topic_name not in topic_ids:
+                con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,))
+                topic_ids[topic_name] = cursor.lastrowid
 
         
 
