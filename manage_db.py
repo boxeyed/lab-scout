@@ -77,6 +77,18 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     topic_ids = {row["name"]: row["id"] for row in con.execute("SELECT name, id FROM topics")}
 
     # Read row data from CSV, insert it into the database
+    for row in df.iterrows:
+
+        # to 'labs'
+        title = row["Title"]
+        if title in existing_titles:  # checks the data is not already in db
+            continue
+
+        if pd.notna(row["Website"]):
+            website = row["Website"]
+        else:
+            website = None
+        
 
     return 0
 
