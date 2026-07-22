@@ -11,8 +11,7 @@ def get_connection():
     con.execute("PRAGMA foreign_keys = ON")
     return con
 
-def setup_db():
-    con = get_connection()
+def setup_db(con: sqlite3.Connection):
     cursor = con.cursor()
 
     cursor.executescript('''
@@ -66,3 +65,10 @@ def wipe_db(con: sqlite3.Connection):
         print("Wipe completed--all data was wiped.")
         return True
     
+
+if __name__ == "__main__":
+    con = get_connection()
+    try:
+        setup_db(con)
+    finally:
+        con.close()
