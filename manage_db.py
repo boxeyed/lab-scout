@@ -38,7 +38,7 @@ def setup_db(con: sqlite3.Connection):
         CREATE TABLE IF NOT EXISTS contacts (
             lab_id INTEGER PRIMARY KEY,
             email TEXT,
-            researcher TEXT,
+            contact_name TEXT,
             FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE
         )
     ''')
@@ -68,7 +68,7 @@ def wipe_db(con: sqlite3.Connection):
 
 def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     """Reads CSV file and inserts data into the database"""
-
+    cursor = con.cursor()
     df = pd.read_csv(csv_path)
     inserted = 0 # keeps track of count of inserted data vals
 
@@ -88,6 +88,15 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
             website = row["Website"]
         else:
             website = None
+        
+        if pd.notna(row["Recruiting Status"]):
+            status = row["Recruiting Status"]
+        else:
+            status = "Unknown"
+
+        con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
+        lab_id = cursor.lastrowid
+
         
 
     return 0
