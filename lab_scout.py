@@ -13,7 +13,7 @@ def setup_db():
     con = get_connection()
     cursor = con.cursor()
 
-    cursor.execute('''
+    cursor.executescript('''
         CREATE TABLE IF NOT EXISTS labs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL UNIQUE,
@@ -103,7 +103,7 @@ def add_lab():
 
     new_row.to_csv(CSV_PATH, mode='a', index=False, header=False)
  
-    print("Lab added.")3
+    print("Lab added.")
 
 
 
