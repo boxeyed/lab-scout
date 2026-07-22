@@ -47,3 +47,22 @@ def setup_db():
 
     con.commit()
     con.close()
+
+def wipe_db(con):
+    verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip
+
+    if verification != "YES":
+        print("Wipe cancelled--no data was lost.")
+        return False
+    
+    else:
+        con.executescript("""
+        DELETE FROM lab_topics;
+        DELETE FROM contacts;
+        DELETE FROM topics;
+        DELETE FROM labs;
+                          """)
+        con.commit()
+        print("Wipe completed--all data was wiped.")
+        return True
+    
