@@ -77,7 +77,8 @@ def add_lab():
 
 # main function
 def main():
-    setup_db()
+    con = get_connection()
+    setup_db(con)
 
     while True:
         print("\n1. Search labs")
