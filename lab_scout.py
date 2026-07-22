@@ -1,6 +1,6 @@
 import pandas as pd
 import sqlite3
-from setup_db import get_connection, setup_db
+from manage_db import get_connection, setup_db
 
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"

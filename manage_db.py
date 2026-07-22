@@ -102,7 +102,11 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
             topic_name = topic_name.strip()
             if topic_name not in topic_ids:
                 con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,))
-                topic_ids[topic_name] = cursor.lastrowid
+                topic_ids[topic_name] = cursor.lastrowid # for lab_x_topics
+
+            # to 'lab_x_topics'
+            con.execute("INSERT INTO lab_x_topics (lab_id, topic_id) VALUES (?, ?)", (lab_id, topic_ids[topic_name]))
+            inserted = inserted + 1
 
         
 
