@@ -16,11 +16,24 @@ def setup_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS labs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
+            title TEXT NOT NULL UNIQUE,
             website TEXT,
-            recruiting_status TEXT
-        )
+            recruiting_status TEXT DEFAULT "Unknown"
+        );
+        
+        CREATE TABLE IF NOT EXISTS topics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+        );
+        
+        CREATE TABLE IF NOT EXISTS contacts (
+            lab_id INTEGER,
+            email TEXT,
+            researcher TEXT
+        );
+                   
     ''')
+
 
     con.commit()
     con.close()
@@ -90,11 +103,14 @@ def add_lab():
 
     new_row.to_csv(CSV_PATH, mode='a', index=False, header=False)
  
-    print("Lab added.")
+    print("Lab added.")3
+
 
 
 # main function
 def main():
+    setup_db()
+
     while True:
         print("\n1. Search labs")
         print("2. Add lab")
