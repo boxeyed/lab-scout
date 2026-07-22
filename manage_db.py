@@ -109,8 +109,8 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
             inserted = inserted + 1
 
         
-
-    return 0
+    con.commmit()
+    return inserted
 
 if __name__ == "__main__":
     con = get_connection()
