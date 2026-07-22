@@ -36,9 +36,10 @@ def setup_db():
         );
         
         CREATE TABLE IF NOT EXISTS contacts (
-            lab_id INTEGER,
+            lab_id INTEGER PRIMARY KEY,
             email TEXT,
             researcher TEXT
+            FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE
         );
                    
     ''')
