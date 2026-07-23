@@ -47,7 +47,7 @@ def setup_db(con: sqlite3.Connection):
     con.commit()
 
 def wipe_db(con: sqlite3.Connection):
-    verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip
+    verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip()
 
     if verification != "YES":
         print("Wipe cancelled--no data was lost.")
