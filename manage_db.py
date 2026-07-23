@@ -56,7 +56,7 @@ def wipe_db(con: sqlite3.Connection):
     
     else:
         con.executescript("""
-        DELETE FROM lab_topics;
+        DELETE FROM lab_x_topics;
         DELETE FROM contacts;
         DELETE FROM topics;
         DELETE FROM labs;
