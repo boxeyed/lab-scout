@@ -32,7 +32,7 @@ def setup_db(con: sqlite3.Connection):
             topic_id INTEGER NOT NULL,
             PRIMARY KEY (lab_id, topic_id),
             FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE, 
-            FOREIGN KEY (topic_id) REFERENCES topic(id) ON DELETE CASCADE
+            FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
         );
         
         CREATE TABLE IF NOT EXISTS contacts (
