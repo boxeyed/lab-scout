@@ -113,12 +113,12 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     return inserted
 
 def ask_migrate_or_clear(con: sqlite3.Connection, csv_path=CSV_PATH):
-        check = input("Choose from the following options:\n1. Migrate csv file to database ['M']\n2. Clear database ['C']\n-> ")
+        check = input("Choose from the following options:\n1. Migrate csv file to database\n2. Clear database\n-> ")
 
-        if check!='M' and check!='C':
-            print("Proceeding to Lab Scout...")
+        if check!='1' and check!='2':
+            print("Invalid input. Try again.")
             return -1
-        elif check=='M':
+        elif check=='1':
             migrate(con, csv_path)
         else:
             wipe_db(con)
