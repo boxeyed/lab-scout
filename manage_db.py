@@ -67,7 +67,7 @@ def wipe_db(con: sqlite3.Connection):
 
 def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     """Reads CSV file and inserts data into the database"""
-    cursor = con.cursor()
+
     df = pd.read_csv(csv_path)
     inserted = 0 # keeps track of count of inserted data vals
 
@@ -93,14 +93,14 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
         else:
             status = "Unknown"
 
-        con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
-        lab_id = cursor.lastrowid # for lab_x_topics
+        lab_id = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
+        lab_id = lab_id.lastrowid # for lab_x_topics
 
         # to 'topics'
         for topic_name in row["Topics"].split(","):
             topic_name = topic_name.strip()
             if topic_name not in topic_ids:
-                con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name))
+                cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,))
                 topic_ids[topic_name] = cursor.lastrowid # for lab_x_topics
 
             # to 'lab_x_topics'
@@ -115,5 +115,6 @@ if __name__ == "__main__":
     con = get_connection()
     try:
         setup_db(con)
+        migrate(con, CSV_PATH)
     finally:
         con.close()
