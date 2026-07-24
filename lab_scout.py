@@ -77,8 +77,10 @@ def add_lab():
 
 # main function
 def main():
-    con = get_connection()
-    setup_db(con)
+    con = sqlite3.connect(DATABASE)
+    con.row_factory = sqlite3.Row
+    con.execute("PRAGMA foreign_keys = ON")
+    setup_db()
 
     while True:
         choice = input("\nChoose from the following options:\n1. Search labs\n2. Add lab\n3. Options\n4. Quit\n-> ").strip()
@@ -88,7 +90,7 @@ def main():
         elif choice == "2":
             add_lab()
         elif choice == "3":
-            ask_migrate_or_clear(con, CSV_PATH)
+            ask_migrate_or_clear()
         elif choice == "4":
             break
         else:

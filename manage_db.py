@@ -4,14 +4,10 @@ import sqlite3
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
  
-
-def get_connection():
+def setup_db():
     con = sqlite3.connect(DATABASE)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
-    return con
-
-def setup_db(con: sqlite3.Connection):
     cursor = con.cursor()
 
     cursor.executescript('''
@@ -45,8 +41,12 @@ def setup_db(con: sqlite3.Connection):
 
 
     con.commit()
+    con.close()
 
-def wipe_db(con: sqlite3.Connection):
+def wipe_db():
+    con = sqlite3.connect(DATABASE)
+    con.row_factory = sqlite3.Row
+    con.execute("PRAGMA foreign_keys = ON")
     verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip()
 
     if verification != "YES":
@@ -59,19 +59,23 @@ def wipe_db(con: sqlite3.Connection):
         DELETE FROM contacts;
         DELETE FROM topics;
         DELETE FROM labs;
-                          """)
+                      """)
         con.commit()
+        con.close()
+
         print("Wipe completed--all data was wiped.")
         return True
     
 
-def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
+def migrate():
     """Reads CSV file and inserts data into the database"""
+    con = sqlite3.connect(DATABASE)
+    con.row_factory = sqlite3.Row
+    con.execute("PRAGMA foreign_keys = ON")
 
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(CSV_PATH)
     inserted = 0 # keeps track of count of inserted data vals
 
-    # Checking what's been in memory instead of constantly verifying each row.
     existing_titles = {row["title"] for row in con.execute("SELECT title FROM labs")}
     topic_ids = {row["name"]: row["id"] for row in con.execute("SELECT name, id FROM topics")}
 
@@ -107,26 +111,33 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
             con.execute("INSERT INTO lab_x_topics (lab_id, topic_id) VALUES (?, ?)", (lab_id, topic_ids[topic_name]))
             inserted = inserted + 1
 
+        # to 'contacts
+        if pd.notna(row["Contact Name"]):
+            name = row["Contact Name"]
+        
+        if pd.notna(row["Contact Email"]):
+            email = row["Contact Email"]
+
+        
+
         
     con.commit()
+    con.close()
+
     print("Migration completed--database updated.")
     return inserted
 
-def ask_migrate_or_clear(con: sqlite3.Connection, csv_path=CSV_PATH):
+def ask_migrate_or_clear():
         check = input("Choose from the following options:\n1. Migrate csv file to database\n2. Clear database\n-> ")
 
         if check!='1' and check!='2':
             print("Invalid input. Try again.")
             return -1
         elif check=='1':
-            migrate(con, csv_path)
+            migrate()
         else:
-            wipe_db(con)
+            wipe_db()
 
 if __name__ == "__main__":
-    con = get_connection()
-    try:
-        setup_db(con)
-        ask_migrate_or_clear(con, CSV_PATH)
-    finally:
-        con.close()
+    setup_db()
+    ask_migrate_or_clear()
