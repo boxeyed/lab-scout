@@ -67,6 +67,11 @@ def wipe_db(con: sqlite3.Connection):
 
 def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     """Reads CSV file and inserts data into the database"""
+    verification = input("Migrate a file? Type 'YES' to confirm: ").strip()
+
+    if verification != "YES":
+        print("Migration cancelled--no files updated.")
+        return 0
 
     df = pd.read_csv(csv_path)
     inserted = 0 # keeps track of count of inserted data vals
