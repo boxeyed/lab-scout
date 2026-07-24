@@ -1,6 +1,6 @@
 import pandas as pd
 import sqlite3
-from manage_db import get_connection, setup_db
+from manage_db import get_connection, setup_db, ask_migrate_or_clear
 
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
@@ -81,16 +81,15 @@ def main():
     setup_db(con)
 
     while True:
-        print("\n1. Search labs")
-        print("2. Add lab")
-        print("3. Quit")
-        choice = input("Choose an option: ").strip()
+        choice = input("\nChoose from the following options:\n1. Search labs\n2. Add lab\n3. Options\n4. Quit\n-> ").strip()
  
         if choice == "1":
             scout_labs()
         elif choice == "2":
             add_lab()
         elif choice == "3":
+            ask_migrate_or_clear(con, CSV_PATH)
+        elif choice == "4":
             break
         else:
             print("Invalid choice, try again.")
