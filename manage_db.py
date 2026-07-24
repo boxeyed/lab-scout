@@ -67,11 +67,6 @@ def wipe_db(con: sqlite3.Connection):
 
 def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     """Reads CSV file and inserts data into the database"""
-    verification = input("Migrate a file? Type 'YES' to confirm: ").strip()
-
-    if verification != "YES":
-        print("Migration cancelled--no files updated.")
-        return 0
 
     df = pd.read_csv(csv_path)
     inserted = 0 # keeps track of count of inserted data vals
@@ -117,10 +112,21 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
     print("Migration completed--database updated.")
     return inserted
 
+def ask_migrate_or_clear(con: sqlite3.Connection, csv_path=CSV_PATH):
+        check = input("Choose from the following options:\n1. Migrate csv file to database ['M']\n2. Clear database ['C']\n-> ")
+
+        if check!='M' and check!='C':
+            print("Proceeding to Lab Scout...")
+            return -1
+        elif check=='M':
+            migrate(con, csv_path)
+        else:
+            wipe_db(con)
+
 if __name__ == "__main__":
     con = get_connection()
     try:
         setup_db(con)
-        migrate(con, CSV_PATH)
+        ask_migrate_or_clear(con, CSV_PATH)
     finally:
         con.close()
