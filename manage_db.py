@@ -114,6 +114,7 @@ def migrate(con: sqlite3.Connection, csv_path=CSV_PATH):
 
         
     con.commit()
+    print("Migration completed--database updated.")
     return inserted
 
 if __name__ == "__main__":
