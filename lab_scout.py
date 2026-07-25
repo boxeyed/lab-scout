@@ -73,7 +73,7 @@ def main():
         choice = input("\nChoose from the following options:\n1. Search labs\n2. Add lab\n3. Options\n4. Quit\n-> ").strip()
  
         if choice == "1":
-            scout_labs()
+            print(scout_labs())
         elif choice == "2":
             add_lab()
         elif choice == "3":
