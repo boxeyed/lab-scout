@@ -5,33 +5,20 @@ from manage_db import setup_db, ask_migrate_or_clear
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
  
-
-def load_records():
-    """Read the CSV and migrate its values to the db (one-time)."""
-    df = pd.read_csv(CSV_PATH)
-    return df.to_dict(orient='records')
-
 def scout_labs():
-    """Ask the user for a topic, print matching labFls."""
-    records = load_records()
-    topic = input("Enter a topic to search for: ").strip()
- 
-    matches = []
-    for record in records:
-        topics_list = [t.strip() for t in record['Topics'].split(',')]
-        if topic in topics_list:
-            matches.append(record)
- 
-    if matches:
-        for record in matches:
-            print(f"\nTitle: {record['Title']}")
-            print(f"Topics: {record['Topics']}")
-            print(f"Contact Name: {record['Contact Name']}")
-            print(f"Contact Email: {record['Contact Email']}")
-            print(f"Recruiting Status: {record['Recruiting Status']}")
-            print(f"Website: {record['Website']}")
-    else:
-        print("No matches found.")
+    """Ask the user for a topic, return a dataframe w/ values"""
+
+    connection = sqlite3.connect(DATABASE)
+
+    topic = input("Enter topic(s) to scout labs for.\n-> ")
+
+    query = """SELECT labs.title, topics.name AS topic, contacts.contact_name, contacts.email, labs.recruiting_status, labs.website FROM labs
+               JOIN lab_x_topics ON labs.id = lab_x_topics.lab_id
+               JOIN topics ON topics.id = lab_x_topics.topic_id
+               LEFT JOIN contacts ON contacts.lab_id = labs.id WHERE topics.name = ?"""
+    
+    return pd.read_sql_query(query, connection, params=(topic,))
+
 
 
 def add_lab():
