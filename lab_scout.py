@@ -1,14 +1,12 @@
 import pandas as pd
 import sqlite3
-from manage_db import setup_db, ask_migrate_or_clear
+from manage_db import setup_db, ask_migrate_or_clear, get_con
 
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
  
-def scout_labs():
+def scout_labs(connection: sqlite3.Connection):
     """Ask the user for a topic, return a dataframe w/ values"""
-
-    connection = sqlite3.connect(DATABASE)
 
     topic = input("Enter topic(s) to scout labs for.\n-> ")
 
@@ -66,16 +64,14 @@ def add_lab():
 
 # main function
 def main():
-    con = sqlite3.connect(DATABASE)
-    con.row_factory = sqlite3.Row
-    con.execute("PRAGMA foreign_keys = ON")
-    setup_db()
+    connection = get_con()
+    setup_db(connection)
 
     while True:
         choice = input("\nChoose from the following options:\n1. Search labs\n2. Add lab\n3. Options\n4. Quit\n-> ").strip()
  
         if choice == "1":
-            print(scout_labs())
+            print(scout_labs(connection))
         elif choice == "2":
             add_lab()
         elif choice == "3":
