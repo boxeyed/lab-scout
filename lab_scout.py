@@ -22,26 +22,28 @@ def scout_labs():
 
 
 def add_lab():
-    """Ask the user for new lab details and append them to the CSV."""
+    """Ask the user for new lab details and append them to the db"""
     title = input("Title: ").strip()
     topics = input("Topics (comma-separated): ").strip()
-    contact_name = input("Contact Name: ").strip()
-    contact_email = input("Contact Email: ").strip()
-    recruit_status = input("Recruiting Status: ").strip()
-    website = input("Website: ").strip()
+    if not title or not topics:
+        print("Title and topics required--lab not added.")
+        return
+    topics = topics.split(",")
+
+    contact_name = input("Contact Name (optional): ").strip()
+    contact_email = input("Contact Email (optional): ").strip()
+    recruit_status = input("Recruiting Status (optional): ").strip()
+    website = input("Website (optional): ").strip()
  
     if not contact_name:
-        contact_name = '-'
+        contact_name = None
     if not contact_email:
-        contact_email = '-'
+        contact_email = None
     if not recruit_status:
-        recruit_status = '-'
+        recruit_status = "Unknown"
     if not website:
-        website = '-'
+        website = None
         
-    if not title or not topics:
-        print("Title and topics required — lab not added.")
-        return
  
     df = pd.read_csv(CSV_PATH)
     new_row = pd.DataFrame(
