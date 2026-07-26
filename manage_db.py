@@ -112,6 +112,8 @@ def migrate(con: sqlite3.Connection):
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
 
+        ############### finish data migration for contacts
+
 
         
     con.commit()
