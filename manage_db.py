@@ -3,11 +3,14 @@ import sqlite3
 
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
- 
-def setup_db():
+
+def get_con():
     con = sqlite3.connect(DATABASE)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
+    return con
+ 
+def setup_db(con: sqlite3.Connection):
     cursor = con.cursor()
 
     cursor.executescript('''
@@ -43,10 +46,7 @@ def setup_db():
     con.commit()
     con.close()
 
-def wipe_db():
-    con = sqlite3.connect(DATABASE)
-    con.row_factory = sqlite3.Row
-    con.execute("PRAGMA foreign_keys = ON")
+def wipe_db(con: sqlite3.Connection):
     verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip()
 
     if verification != "YES":
@@ -67,11 +67,8 @@ def wipe_db():
         return True
     
 
-def migrate():
+def migrate(con: sqlite3.Connection):
     """Reads CSV file and inserts data into the database"""
-    con = sqlite3.connect(DATABASE)
-    con.row_factory = sqlite3.Row
-    con.execute("PRAGMA foreign_keys = ON")
 
     df = pd.read_csv(CSV_PATH)
     inserted = 0 # keeps track of count of inserted data vals
@@ -128,15 +125,16 @@ def migrate():
     return inserted
 
 def ask_migrate_or_clear():
+        con = get_con()
         check = input("Choose from the following options:\n1. Migrate csv file to database\n2. Clear database\n-> ")
 
         if check!='1' and check!='2':
             print("Invalid input. Try again.")
             return -1
         elif check=='1':
-            migrate()
+            migrate(con)
         else:
-            wipe_db()
+            wipe_db(con)
 
 if __name__ == "__main__":
     setup_db()
