@@ -42,9 +42,7 @@ def setup_db(con: sqlite3.Connection):
         )
     ''')
 
-
     con.commit()
-    con.close()
 
 def wipe_db(con: sqlite3.Connection):
     verification = input("This will wipe all data from the database. Type 'YES' to confirm: ").strip()
@@ -61,7 +59,6 @@ def wipe_db(con: sqlite3.Connection):
         DELETE FROM labs;
                       """)
         con.commit()
-        con.close()
 
         print("Wipe completed--all data was wiped.")
         return True
@@ -115,17 +112,14 @@ def migrate(con: sqlite3.Connection):
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
 
-        
 
         
     con.commit()
-    con.close()
 
     print("Migration completed--database updated.")
     return inserted
 
-def ask_migrate_or_clear():
-        con = get_con()
+def ask_migrate_or_clear(con: sqlite3.Connection):
         check = input("Choose from the following options:\n1. Migrate csv file to database\n2. Clear database\n-> ")
 
         if check!='1' and check!='2':
@@ -137,5 +131,7 @@ def ask_migrate_or_clear():
             wipe_db(con)
 
 if __name__ == "__main__":
-    setup_db()
-    ask_migrate_or_clear()
+    con = get_con()
+    setup_db(con)
+    ask_migrate_or_clear(con)
+    con.close()

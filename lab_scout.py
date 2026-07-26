@@ -19,7 +19,7 @@ def scout_labs(connection: sqlite3.Connection):
 
 
 
-def add_lab():
+def add_lab(con: sqlite3.Connection):
     """Ask the user for new lab details and append them to the db"""
     title = input("Title: ").strip()
     topics = input("Topics (comma-separated): ").strip()
@@ -43,22 +43,20 @@ def add_lab():
         website = None
         
  
-    df = pd.read_csv(CSV_PATH)
-    new_row = pd.DataFrame(
-        [{'Title': title, 'Topics': topics, 'Contact Name': contact_name, 'Contact Email': contact_email, 'Recruiting Status': recruit_status, 'Website': website}],
-        columns=df.columns
-    )
-
-    with open(CSV_PATH, 'rb+') as f:
-        f.seek(0, 2)
-        if f.tell() > 0:
-            f.seek(-1, 2)
-            if f.read(1) != b'\n':
-                f.write(b'\n')
-
-    new_row.to_csv(CSV_PATH, mode='a', index=False, header=False)
+    existing = con.execute("SELECT id FROM labs WHERE title = ?", (title,)).fetchone()
+    # Title already exists, duplicate not added. 
+    if existing==True:
+        return
+    
+    cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)", (title, website, recruit_status),)
+    lab_id = cursor.lastrowid
  
+    if contact_name or contact_email:
+        con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, contact_email, contact_name),)
+ 
+    con.commit()
     print("Lab added.")
+    return
 
 
 
@@ -73,10 +71,11 @@ def main():
         if choice == "1":
             print(scout_labs(connection))
         elif choice == "2":
-            add_lab()
+            add_lab(connection)
         elif choice == "3":
             ask_migrate_or_clear()
         elif choice == "4":
+            connection.close()
             break
         else:
             print("Invalid choice, try again.")
