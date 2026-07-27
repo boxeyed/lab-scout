@@ -60,8 +60,13 @@ def add_lab(con: sqlite3.Connection):
     print("Lab added.")
     return
 
-def check_lab_topics(con: sqlite3.Connection):
-    """Check if topics entered already exists in database, add to db if not. Returns topic id."""
+def check_lab_topics(con: sqlite3.Connection, topic) -> int:
+    """Check if topic entered already exists in database, add to db if not. Returns topic id."""
+    row = con.execute("SELECT id FROM topics WHERE name = ?", (topic,)).fetchone()
+    if row:
+        return row["id"]
+    cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic,))
+    return cursor.lastrowid
     
 
 
