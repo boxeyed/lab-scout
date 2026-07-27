@@ -92,7 +92,7 @@ def migrate(con: sqlite3.Connection):
             status = "Unknown"
 
         lab_id = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
-        lab_id = lab_id.lastrowid # for lab_x_topics
+        lab_id = lab_id.lastrowid # for lab_x_topics and contacts
 
         # to 'topics'
         for topic_name in row["Topics"].split(","):
@@ -112,10 +112,9 @@ def migrate(con: sqlite3.Connection):
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
 
-        ############### finish data migration for contacts
+        con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email, name))
 
-
-        
+   
     con.commit()
 
     print("Migration completed--database updated.")
