@@ -59,6 +59,7 @@ def add_lab(con: sqlite3.Connection):
         if(is_unique):
             con.execute("INSERT OR IGNORE INTO topics (id, name) VALUES (?, ?)", (lab_id, topic),)
 
+    con.commit()
     print("Lab added.")
     return
 
@@ -86,7 +87,7 @@ def main():
         elif choice == "2":
             add_lab(connection)
         elif choice == "3":
-            ask_migrate_or_clear()
+            ask_migrate_or_clear(connection)
         elif choice == "4":
             connection.close()
             break
