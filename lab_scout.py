@@ -54,9 +54,10 @@ def add_lab(con: sqlite3.Connection):
     if contact_name or contact_email:
         con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, contact_email, contact_name),)
 
-    ###################### insert lab topics to its table
- 
-    con.commit() ################## have a separate commit function for staging labs later
+    for topic in topics:
+        topic_id = check_lab_topics(con, topic)
+        con.execute("INSERT INTO topics (topic_id, topic) VALUES (?, ?)", (lab_id, topic))
+
     print("Lab added.")
     return
 
