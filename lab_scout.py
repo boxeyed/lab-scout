@@ -60,6 +60,10 @@ def add_lab(con: sqlite3.Connection):
     print("Lab added.")
     return
 
+def check_lab_topics(con: sqlite3.Connection):
+    """Check if topics entered already exists in database, add to db if not. Returns topic id."""
+    
+
 
 
 # main function
