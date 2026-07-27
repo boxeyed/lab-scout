@@ -56,7 +56,7 @@ def add_lab(con: sqlite3.Connection):
 
     for topic in topics:
         topic_id = check_lab_topics(con, topic)
-        con.execute("INSERT INTO topics (topic_id, topic) VALUES (?, ?)", (lab_id, topic))
+        con.execute("INSERT INTO topics (id, name) VALUES (?, ?)", (lab_id, topic))
 
     print("Lab added.")
     return
