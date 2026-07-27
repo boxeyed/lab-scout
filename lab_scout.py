@@ -45,7 +45,7 @@ def add_lab(con: sqlite3.Connection):
  
     existing = con.execute("SELECT id FROM labs WHERE title = ?", (title,)).fetchone()
     # Title already exists, duplicate not added. 
-    if existing==True:
+    if existing:
         return
     
     cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)", (title, website, recruit_status),)
@@ -55,19 +55,20 @@ def add_lab(con: sqlite3.Connection):
         con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, contact_email, contact_name),)
 
     for topic in topics:
-        topic_id = check_lab_topics(con, topic)
-        con.execute("INSERT INTO topics (id, name) VALUES (?, ?)", (lab_id, topic))
+        topic_id, is_unique = check_lab_topics(con, topic)
+        if(is_unique):
+            con.execute("INSERT INTO topics (id, name) VALUES (?, ?)", (lab_id, topic),)
 
     print("Lab added.")
     return
 
-def check_lab_topics(con: sqlite3.Connection, topic) -> int:
-    """Check if topic entered already exists in database, add to db if not. Returns topic id."""
+def check_lab_topics(con: sqlite3.Connection, topic):
+    """Check if topic entered already exists in database, add to db if not. Returns topic id and True if UNIQUE"""
     row = con.execute("SELECT id FROM topics WHERE name = ?", (topic,)).fetchone()
     if row:
-        return row["id"]
+        return row["id"], False
     cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic,))
-    return cursor.lastrowid
+    return cursor.lastrowid, True
     
 
 
