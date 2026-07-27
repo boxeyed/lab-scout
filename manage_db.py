@@ -97,8 +97,8 @@ def migrate(con: sqlite3.Connection):
         # to 'topics'
         for topic_name in row["Topics"].split(","):
             topic_name = topic_name.strip()
-            if topic_name not in topic_ids:
-                cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,)) # the internal cursor return
+            if topic_name not in topic_ids:                              # ????? name to ids will always be diff
+                cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,)) 
                 topic_ids[topic_name] = cursor.lastrowid # for lab_x_topics
 
             # to 'lab_x_topics'
