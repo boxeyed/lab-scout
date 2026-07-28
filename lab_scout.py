@@ -63,7 +63,6 @@ def add_lab(con: sqlite3.Connection):
     print("Lab added.")
     return
 
-# Currently, this adds duplicate topics to the database.
 def check_lab_topics(con: sqlite3.Connection, topic):
     """Check if topic entered already exists in database, add to db if not. Returns topic id and True if UNIQUE"""
     row = con.execute("SELECT id FROM topics WHERE name = ?", (topic,)).fetchone()
