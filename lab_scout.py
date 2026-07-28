@@ -34,13 +34,13 @@ def add_lab(con: sqlite3.Connection):
     website = input("Website (optional): ").strip()
  
     if not contact_name:
-        contact_name = None
+        contact_name = "Unknown"
     if not contact_email:
-        contact_email = None
+        contact_email = "Unknown"
     if not recruit_status:
         recruit_status = "Unknown"
     if not website:
-        website = None
+        website = "Unknown"
         
  
     existing = con.execute("SELECT id FROM labs WHERE title = ?", (title,)).fetchone()
