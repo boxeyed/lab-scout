@@ -21,7 +21,10 @@ def scout_labs(connection: sqlite3.Connection):
 
 def add_lab(con: sqlite3.Connection):
     """Ask the user for new lab details and append them to the db"""
+
+    # Gets title, restarts if title already exists. 
     title = input("Title: ").strip()
+
     topics = input("Topics (comma-separated): ").strip()
     if not title or not topics:
         print("Title and topics required--lab not added.")
@@ -44,8 +47,8 @@ def add_lab(con: sqlite3.Connection):
         
  
     existing = con.execute("SELECT id FROM labs WHERE title = ?", (title,)).fetchone()
-    # Title already exists, duplicate not added. 
     if existing:
+        print("Title already exists--lab not added.")
         return
     
     cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)", (title, website, recruit_status),)
