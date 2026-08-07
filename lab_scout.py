@@ -29,7 +29,7 @@ def add_lab(con: sqlite3.Connection):
     if not title or not topics:
         print("Title and topics required--lab not added.")
         return
-    topics = topics.split(",")
+    topics = [topic.strip() for topic in topics.split(",") if topic.strip()]
 
     contact_name = input("Contact Name (optional): ").strip()
     contact_email = input("Contact Email (optional): ").strip()
