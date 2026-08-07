@@ -108,9 +108,13 @@ def migrate(con: sqlite3.Connection):
         # to 'contacts
         if pd.notna(row["Contact Name"]):
             name = row["Contact Name"]
+        else:
+            name = "Unknown"
         
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
+        else:
+            nane = "Unknown"
 
         con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email, name))
 
