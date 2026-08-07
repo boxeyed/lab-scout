@@ -60,7 +60,7 @@ def add_lab(con: sqlite3.Connection):
     for topic in topics:
         topic_id, is_unique = check_lab_topics(con, topic)
         if(is_unique):
-            con.execute("INSERT OR IGNORE INTO topics (id, name) VALUES (?, ?)", (lab_id, topic),)
+            con.execute("INSERT OR IGNORE INTO lab_x_topics (lab_id, topic_id) VALUES (?, ?)", (lab_id, topic_id),)
 
     con.commit()
     print("Lab added.")
