@@ -83,11 +83,15 @@ def migrate(con: sqlite3.Connection):
 
         if pd.notna(row["Website"]):
             website = row["Website"]
+            if website is "-":
+                website = "Unknown"
         else:
-            website = None
+            website = "Unknown"
         
         if pd.notna(row["Recruiting Status"]):
             status = row["Recruiting Status"]
+            if status is "-":
+                status = "Unknown"
         else:
             status = "Unknown"
 
@@ -108,13 +112,17 @@ def migrate(con: sqlite3.Connection):
         # to 'contacts
         if pd.notna(row["Contact Name"]):
             name = row["Contact Name"]
+            if name is "-":
+                name = "Unknown"
         else:
             name = "Unknown"
         
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
+            if email is "-":
+                email = "Unknown"
         else:
-            nane = "Unknown"
+            email = "Unknown"
 
         con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email, name))
 
