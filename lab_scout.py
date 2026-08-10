@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 from manage_db import setup_db, ask_migrate_or_clear, get_con
+from input_getter import scout_lab_input, add_lab_input
 
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
@@ -8,7 +9,7 @@ DATABASE = "labs.db"
 def scout_labs(connection: sqlite3.Connection):
     """Ask the user for a topic, return a dataframe w/ values"""
 
-    topic = input("Enter topic(s) to scout labs for.\n-> ")
+    topic = scout_lab_input()
 
     query = """SELECT labs.title, topics.name AS topic, contacts.contact_name, contacts.email, labs.recruiting_status, labs.website FROM labs
                JOIN lab_x_topics ON labs.id = lab_x_topics.lab_id
@@ -18,23 +19,11 @@ def scout_labs(connection: sqlite3.Connection):
     return pd.read_sql_query(query, connection, params=(topic,))
 
 
-
 def add_lab(con: sqlite3.Connection):
     """Ask the user for new lab details and append them to the db"""
 
     # Gets title, restarts if title already exists. 
-    title = input("Title: ").strip()
-
-    topics = input("Topics (comma-separated): ").strip()
-    if not title or not topics:
-        print("Title and topics required--lab not added.")
-        return
-    topics = [topic.strip() for topic in topics.split(",") if topic.strip()]
-
-    contact_name = input("Contact Name (optional): ").strip()
-    contact_email = input("Contact Email (optional): ").strip()
-    recruit_status = input("Recruiting Status (optional): ").strip()
-    website = input("Website (optional): ").strip()
+    title, topics, contact_name, contact_email, recruit_status, website = add_lab_input()
  
     if not contact_name:
         contact_name = "Unknown"
