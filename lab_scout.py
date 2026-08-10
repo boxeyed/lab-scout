@@ -13,6 +13,7 @@ def scout_labs(connection: sqlite3.Connection):
     if output:
         topic = output
     else:
+        print("No topics selected--lab scout ended.")
         return
 
     query = """SELECT labs.title, topics.name AS topic, contacts.contact_name, contacts.email, labs.recruiting_status, labs.website FROM labs
