@@ -83,14 +83,14 @@ def migrate(con: sqlite3.Connection):
 
         if pd.notna(row["Website"]):
             website = row["Website"]
-            if website is "-":
+            if website == "-":
                 website = "Unknown"
         else:
             website = "Unknown"
         
         if pd.notna(row["Recruiting Status"]):
             status = row["Recruiting Status"]
-            if status is "-":
+            if status == "-":
                 status = "Unknown"
         else:
             status = "Unknown"
@@ -112,14 +112,14 @@ def migrate(con: sqlite3.Connection):
         # to 'contacts
         if pd.notna(row["Contact Name"]):
             name = row["Contact Name"]
-            if name is "-":
+            if name == "-":
                 name = "Unknown"
         else:
             name = "Unknown"
         
         if pd.notna(row["Contact Email"]):
             email = row["Contact Email"]
-            if email is "-":
+            if email == "-":
                 email = "Unknown"
         else:
             email = "Unknown"
