@@ -46,8 +46,7 @@ def add_lab(con: sqlite3.Connection):
 
     for topic in topics:
         topic_id, is_unique = check_lab_topics(con, topic)
-        if(is_unique):
-            con.execute("INSERT OR IGNORE INTO lab_x_topics (lab_id, topic_id) VALUES (?, ?)", (lab_id, topic_id),)
+        con.execute("INSERT OR IGNORE INTO lab_x_topics (lab_id, topic_id) VALUES (?, ?)", (lab_id, topic_id),)
 
     con.commit()
     print("Lab added.")
@@ -61,8 +60,6 @@ def check_lab_topics(con: sqlite3.Connection, topic):
     cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic,))
     return cursor.lastrowid, True
     
-
-
 
 # main function
 def main():
