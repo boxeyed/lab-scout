@@ -9,7 +9,11 @@ DATABASE = "labs.db"
 def scout_labs(connection: sqlite3.Connection):
     """Ask the user for a topic, return a dataframe w/ values"""
 
-    topic = scout_lab_input()
+    output = scout_lab_input()
+    if output:
+        topic = output
+    else:
+        return
 
     query = """SELECT labs.title, topics.name AS topic, contacts.contact_name, contacts.email, labs.recruiting_status, labs.website FROM labs
                JOIN lab_x_topics ON labs.id = lab_x_topics.lab_id
@@ -23,18 +27,12 @@ def add_lab(con: sqlite3.Connection):
     """Ask the user for new lab details and append them to the db"""
 
     # Gets title, restarts if title already exists. 
-    title, topics, contact_name, contact_email, recruit_status, website = add_lab_input()
- 
-    if not contact_name:
-        contact_name = "Unknown"
-    if not contact_email:
-        contact_email = "Unknown"
-    if not recruit_status:
-        recruit_status = "Unknown"
-    if not website:
-        website = "Unknown"
+    output = add_lab_input()
+    if output:
+        title, topics, contact_name, contact_email, recruit_status, website = output
+    else:
+        return
         
- 
     existing = con.execute("SELECT id FROM labs WHERE title = ?", (title,)).fetchone()
     if existing:
         print("Title already exists--lab not added.")
