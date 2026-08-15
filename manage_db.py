@@ -97,15 +97,14 @@ def migrate(con: sqlite3.Connection):
         else:
             status = "Unknown"
 
-        
-        lab_id: sqlite3.Cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
+        lab_id: sqlite3.Cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title.lower(), website.lower(), status.lower()))
         lab_id = lab_id.lastrowid # for lab_x_topics and contacts
 
         # to 'topics'
         for topic_name in row["Topics"].split(","):
-            topic_name: str = topic_name.strip()
+            topic_name: str = topic_name.strip().lower()
             if topic_name not in topic_ids:                       
-                cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,)) 
+                cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name.lower(),)) 
                 topic_ids[topic_name] = cursor.lastrowid # for lab_x_topics
 
             # to 'lab_x_topics'
@@ -127,7 +126,7 @@ def migrate(con: sqlite3.Connection):
         else:
             email: str = "Unknown"
 
-        con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email, name))
+        con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email.lower(), name.lower()))
 
    
     con.commit()
