@@ -12,6 +12,7 @@ def get_con():
     return con
  
 def setup_db(con: sqlite3.Connection):
+
     cursor = con.cursor()
 
     cursor.executescript('''
@@ -72,36 +73,37 @@ def migrate(con: sqlite3.Connection):
     inserted = 0 # keeps track of count of inserted data vals
 
     existing_titles = {row["title"] for row in con.execute("SELECT title FROM labs")}
-    topic_ids = {row["name"]: row["id"] for row in con.execute("SELECT name, id FROM topics")}
+    topic_ids: dict = {row["name"]: row["id"] for row in con.execute("SELECT name, id FROM topics")}
 
     # Read row data from CSV, insert it into the database
     for _, row in df.iterrows():
 
         # to 'labs'
-        title = row["Title"]
+        title: str = row["Title"]
         if title in existing_titles:  # checks the data is not already in db
             continue
 
         if pd.notna(row["Website"]):
-            website = row["Website"]
+            website: str = row["Website"]
             if website == "-":
                 website = "Unknown"
         else:
             website = "Unknown"
         
         if pd.notna(row["Recruiting Status"]):
-            status = row["Recruiting Status"]
+            status: str = row["Recruiting Status"]
             if status == "-":
                 status = "Unknown"
         else:
             status = "Unknown"
 
+
         lab_id = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
-        lab_id = lab_id.lastrowid # for lab_x_topics and contacts
+        lab_id: int = lab_id.lastrowid # for lab_x_topics and contacts
 
         # to 'topics'
         for topic_name in row["Topics"].split(","):
-            topic_name = topic_name.strip()
+            topic_name: str = topic_name.strip()
             if topic_name not in topic_ids:                       
                 cursor = con.execute("INSERT INTO topics (name) VALUES (?)", (topic_name,)) 
                 topic_ids[topic_name] = cursor.lastrowid # for lab_x_topics
@@ -112,18 +114,18 @@ def migrate(con: sqlite3.Connection):
 
         # to 'contacts
         if pd.notna(row["Contact Name"]):
-            name = row["Contact Name"]
+            name: str = row["Contact Name"]
             if name == "-":
                 name = "Unknown"
         else:
-            name = "Unknown"
+            name: str = "Unknown"
         
         if pd.notna(row["Contact Email"]):
-            email = row["Contact Email"]
+            email: str = row["Contact Email"]
             if email == "-":
                 email = "Unknown"
         else:
-            email = "Unknown"
+            email: str = "Unknown"
 
         con.execute("INSERT INTO contacts (lab_id, email, contact_name) VALUES (?, ?, ?)", (lab_id, email, name))
 
