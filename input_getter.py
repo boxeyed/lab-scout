@@ -1,22 +1,24 @@
 # Input prompter separate for the purpose of isoloating test cases.
+# Also handles cases and will be used for similar result searching
+
 CHAR_LIMIT = 64
 
 def scout_lab_input():
-    return input("Enter topic(s) to scout labs for.\n-> ")
+    return input("Enter topic(s) to scout labs for.\n-> ").strip().lower()
 
 def add_lab_input():
-    title = input("Title: ").strip()
+    title = input("Title: ").strip().lower()
 
-    topics = input("Topics (comma-separated): ").strip()
+    topics = input("Topics (comma-separated): ").strip().lower()
     if not title or not topics:
         print("Title and topics required--lab not added.")
         return
-    topics = [topic.strip() for topic in topics.split(",") if topic.strip()]
+    topics = [topic.strip().lower() for topic in topics.split(",") if topic.strip().lower()]
 
-    contact_name = input("Contact Name (optional): ").strip()
-    contact_email = input("Contact Email (optional): ").strip()
-    recruit_status = input("Recruiting Status (optional): ").strip()
-    website = input("Website (optional): ").strip()
+    contact_name = input("Contact Name (optional): ").strip().lower()
+    contact_email = input("Contact Email (optional): ").strip().lower()
+    recruit_status = input("Recruiting Status (optional): ").strip().lower()
+    website = input("Website (optional): ").strip().lower()
 
     if not contact_name:
         contact_name = "Unknown"
