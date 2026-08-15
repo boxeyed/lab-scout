@@ -97,9 +97,9 @@ def migrate(con: sqlite3.Connection):
         else:
             status = "Unknown"
 
-
-        lab_id = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
-        lab_id: int = lab_id.lastrowid # for lab_x_topics and contacts
+        
+        lab_id: sqlite3.Cursor = con.execute("INSERT INTO labs (title, website, recruiting_status) VALUES (?, ?, ?)",(title, website, status))
+        lab_id = lab_id.lastrowid # for lab_x_topics and contacts
 
         # to 'topics'
         for topic_name in row["Topics"].split(","):
