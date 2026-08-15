@@ -4,6 +4,7 @@ import sqlite3
 CSV_PATH = "data.csv"
 DATABASE = "labs.db"
 
+# specific to the program, not tests ***
 def get_con():
     con = sqlite3.connect(DATABASE)
     con.row_factory = sqlite3.Row
